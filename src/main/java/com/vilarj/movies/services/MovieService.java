@@ -11,6 +11,8 @@ import org.springframework.web.client.RestTemplate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
+
 import com.vilarj.movies.validators.Validation;
 
 /**
@@ -71,6 +73,47 @@ public class MovieService {
         } catch (Exception e) {
             System.err.println("Unexpected error occurred: " + e.getMessage());
             return Collections.emptyList();
+        }
+    }
+
+    /**
+     * Retrieves a list of movies matching the provided title.
+     * <summary>
+     * This method performs a case-insensitive strict title search for movies using the TMDB API.
+     * If a matching movie is found, a single `Movie` object is wrapped in a `List` and returned.
+     * Otherwise, an empty list is returned.
+     * </summary>
+     * <p>
+     * In case of network errors or API issues during the TMDB call, a `RuntimeException` is thrown.
+     *
+     * @param title {String} - The exact title of the movie to search for.
+     * @return A `List` containing a single `Movie` object if found, otherwise an empty list.
+     * @throws RuntimeException Thrown if an error occurs while fetching data from TMDB.
+     *                          </p>
+     */
+    public List<Movie> getExactMovieByTitle(String title) {
+        String encodedTitle = title.replace(" ", "+");
+        String url = Constants.TMDB_BASE_URL + "/search/movie?api_key=" + Constants.API_KEY + "&query=" + encodedTitle;
+
+        try {
+            TmdbResponse response = restTemplate.getForObject(url, TmdbResponse.class);
+
+            if (response != null && response.getResults() != null) {
+                Optional<Tmdb> foundMovie = response.getResults().stream()
+                        .filter(tmdb -> tmdb.getTitle().equalsIgnoreCase(title))
+                        .findFirst();
+
+                return foundMovie.map(tmdb -> {
+                    Movie movie = new Movie();
+                    movie.setTitle(tmdb.getTitle());
+                    movie.setDirector(tmdb.getDirector());
+                    return Collections.singletonList(movie);
+                }).orElse(Collections.emptyList());
+            }
+
+            return Collections.emptyList();
+        } catch (RestClientResponseException e) {
+            throw new RuntimeException("Error fetching movie data", e);
         }
     }
 

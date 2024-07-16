@@ -41,6 +41,26 @@ public class MovieController {
     }
 
     /**
+     * Retrieves a list of movies matching the provided title.
+     * <summary>
+     * This method performs a case-insensitive strict title search for movies using the TMDB API.
+     * If a matching movie is found, a single `Movie` object is wrapped in a `List` and returned.
+     * Otherwise, an empty list is returned.
+     * </summary>
+     * <p>
+     * In case of network errors or API issues during the TMDB call, a `RuntimeException` is thrown.
+     *
+     * @param title {String} - The exact title of the movie to search for.
+     * @return A `List` containing a single `Movie` object if found, otherwise an empty list.
+     * @throws RuntimeException Thrown if an error occurs while fetching data from TMDB.
+     *                          </p>
+     */
+    @GetMapping("/getExactMovieByTitle")
+    public List<Movie> getExactMovieByTitle(String title) {
+        return movieService.getExactMovieByTitle(title);
+    }
+
+    /**
      * Searches for movies by title.
      *  <summary>
      * This endpoint searches for movies based on the provided title string.
