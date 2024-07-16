@@ -7,3 +7,6 @@ to retrieve movies and display those in the movies-app frontend application.
 
 # How to get data from TMDB API
 - https://developer.themoviedb.org/docs/finding-data
+
+# TMDB API Endpoint Documentation
+- https://developer.themoviedb.org/reference/intro/getting-started
