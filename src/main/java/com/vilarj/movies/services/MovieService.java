@@ -1,23 +1,30 @@
 package com.vilarj.movies.services;
 
+import com.vilarj.movies.constants.Constants;
 import com.vilarj.movies.entities.Movie;
 import com.vilarj.movies.interfaces.MovieRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import com.vilarj.movies.validators.Validation;
 
+/**
+ * Service class for interacting with TMDB (The Movie Database) movie data.
+ * <p>
+ * This class provides methods to retrieve movie data from TMDB using a configured
+ * API key. It offers functionalities to fetch popular movies, search movies by title,
+ * and retrieve trending movies for a specified time window.
+ * </p>
+ */
 @Service
 public class MovieService {
 
     private final MovieRepository MOVIE_REPOSITORY;
-
-    @Value("${tmdb.api.key}")
-    private String API_KEY;
-//    private final String API_READ_ACCESS_TOKEN = "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI0YzMxODg1OTdjOTEyNTE4NmRmYjY1Mjg5YTRiZGNiNCIsIm5iZiI6MTcyMTEzMDAxNy40MTE3MTEsInN1YiI6IjY2OTY1YjgzNTcwZmNiYmFmOGQ1ZmMwYyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.1jBqE2Qp__lojmnm6dF9ga0utXQh6BybUuhIyI2ohBE";
     private RestTemplate restTemplate;
 
     @Autowired
@@ -26,42 +33,141 @@ public class MovieService {
         restTemplate = template;
     }
 
+    /**
+     * Fetches a list of popular movies from TMDB.
+     * <p>
+     * This method retrieves a list of popular movies from The Movie Database (TMDB)
+     * based on the configured API key. The language is set to "en-US" and the page
+     * number is set to 1 (default for popular movies).
+     *
+     * @return A list of Movie objects containing details about popular movies.
+     *         An empty list is returned if an error occurs during the API call.
+     * @throws RestClientResponseException  - If an error occurs during the API call
+     *                                      (e.g., status code errors).
+     * @throws Exception                    - If any other unexpected exception occurs.
+     * </p>
+     */
     public List<Movie> getAllMovies() {
-        String url = "https://api.themoviedb.org/3/movie/popular?api_key=" + API_KEY + "&language=en-US&page=1";
+        String url = Constants.TMDB_BASE_URL + "movie/popular?api_key=" + Constants.API_KEY + "&language=en-US&page=1";
 
-        TmdbResponse response = restTemplate.getForObject(url, TmdbResponse.class);
+        try {
+            TmdbResponse response = restTemplate.getForObject(url, TmdbResponse.class);
 
-        List<Movie> movies = new ArrayList<>();
+            List<Movie> movies = new ArrayList<>();
 
-        if (response != null && response.getResults() != null) {
-            for (Tmdb tmdbMovie : response.getResults()) {
-                Movie movie = new Movie();
-                movie.setTitle(tmdbMovie.getTitle());
-                movie.setDirector(tmdbMovie.getDirector());
-                movies.add(movie);
+            if (response != null && response.getResults() != null) {
+                for (Tmdb tmdbMovie : response.getResults()) {
+                    Movie movie = new Movie();
+                    movie.setTitle(tmdbMovie.getTitle());
+                    movie.setDirector(tmdbMovie.getDirector());
+                    movies.add(movie);
+                }
             }
-        }
 
-        return movies;
+            return movies;
+        } catch (RestClientResponseException e) {
+            System.err.println("Error occurred while fetching popular movies: " + e.getMessage());
+            return Collections.emptyList();
+        } catch (Exception e) {
+            System.err.println("Unexpected error occurred: " + e.getMessage());
+            return Collections.emptyList();
+        }
     }
 
+    /**
+     * Searches for movies by title on TMDB.
+     * <p>
+     * This method searches for movies based on the provided title string on The Movie Database (TMDB).
+     * The title string is URL encoded before making the API call.
+     *
+     * @param title - The title of the movie to search for.
+     * @return A list of Movie objects containing details about movies matching the search title.
+     *         An empty list is returned if an error occurs during the API call or no movies are found.
+     * @throws RestClientResponseException  - If an error occurs during the API call
+     *                                      (e.g., status code errors).
+     * @throws Exception                    - If any other unexpected exception occurs.
+     * </p>
+     */
     public List<Movie> getMovieByTitle(String title) {
         String encodedTitle = title.replace(" ", "+");
-        String url = "https://api.themoviedb.org/3/search/movie?api_key=" + API_KEY + "&query=" + encodedTitle;
+        String url = Constants.TMDB_BASE_URL + "/search/movie?api_key=" + Constants.API_KEY + "&query=" + encodedTitle;
 
-        // Make the API call
-        TmdbResponse response = restTemplate.getForObject(url, TmdbResponse.class);
+        try {
+            TmdbResponse response = restTemplate.getForObject(url, TmdbResponse.class);
 
-        List<Movie> movies = new ArrayList<>();
-        if (response != null && response.getResults() != null) {
-            for (Tmdb tmdb : response.getResults()) {
-                Movie movie = new Movie();
-                movie.setTitle(tmdb.getTitle());
-                movie.setDirector(tmdb.getDirector());
-                movies.add(movie);
+            List<Movie> movies = new ArrayList<>();
+            if (response != null && response.getResults() != null) {
+                for (Tmdb tmdb : response.getResults()) {
+                    Movie movie = new Movie();
+                    movie.setTitle(tmdb.getTitle());
+                    movie.setDirector(tmdb.getDirector());
+                    movies.add(movie);
+                }
             }
+            return movies;
+        } catch (RestClientResponseException e) {
+            System.err.println("Error occurred while searching movies by title: " + e.getMessage());
+            return Collections.emptyList();
+        } catch (Exception e) {
+            System.err.println("Unexpected error occurred: " + e.getMessage());
+            return Collections.emptyList();
         }
+    }
 
-        return movies;
+    /**
+     * Fetches a list of trending movies on TMDB for a specified time window.
+     * <p>
+     * This method retrieves a list of trending movies on The Movie Database (TMDB)
+     * based on the configured API key and provided time window. The time window
+     * parameter can be either "day" or "week".
+     *
+     * @param time_window - The time window for trending movies (literal string: "day" or "week").
+     * @return A list of Movie objects containing details about trending movies.
+     *         An empty list is returned if an error occurs during the API call or
+     *         if the provided time window is invalid.
+     * @throws RestClientResponseException  - If an error occurs during the API call
+     *                                      (e.g., status code errors).
+     * @throws IllegalArgumentException     - If an invalid time window parameter is provided.
+     * @throws Exception                    - If any other unexpected exception occurs.
+     * </p>
+     */
+    public List<Movie> getTrendingMovies(String time_window) {
+        //String key = "4c3188597c9125186dfb65289a4bdcb4";
+        String url = Constants.TMDB_BASE_URL + "trending/movie/" + time_window + "?api_key=" + Constants.API_KEY;
+
+        try {
+            if (!Validation.isValidAPIKey(Constants.API_KEY)) {
+                throw new IllegalArgumentException("API KEY cannot be null");
+            }
+            else {
+                if (!Validation.isValidTimeWindow(time_window)) {
+                    throw new IllegalArgumentException("Invalid time window provided. Supported values: day, week");
+                }
+
+                TmdbResponse response = restTemplate.getForObject(url, TmdbResponse.class);
+
+                List<Movie> movies = new ArrayList<>();
+
+                if (response != null && response.getResults() != null) {
+                    for (Tmdb tmdb : response.getResults()) {
+                        Movie movie = new Movie();
+                        movie.setTitle(tmdb.getTitle());
+                        movie.setDirector(tmdb.getDirector());
+                        movies.add(movie);
+                    }
+                }
+
+                return movies;
+            }
+        } catch (RestClientResponseException e) {
+            System.err.println("Error occurred while fetching trending movies: " + e.getMessage());
+            return Collections.emptyList();
+        } catch (IllegalArgumentException e) {
+            System.err.println("Invalid time window provided: " + e.getMessage());
+            return Collections.emptyList();
+        } catch (Exception e) {
+            System.err.println("Unexpected error occurred: " + e.getMessage());
+            return Collections.emptyList();
+        }
     }
 }

@@ -7,6 +7,15 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * Controller class for handling movie-related API requests.
+ * <summary>
+ * This class exposes endpoints for fetching movie data from TMDB (The Movie Database)
+ * based on the configured API key in the MovieService. It provides functionalities
+ * to retrieve popular movies, search movies by title, and get trending movies for a
+ * specified time window.
+ * </summary>
+ */
 @RestController
 @RequestMapping("/api/movies")
 public class MovieController {
@@ -17,14 +26,50 @@ public class MovieController {
         this.movieService = movieService;
     }
 
+    /**
+     * Fetches a list of popular movies.
+     * <summary>
+     * This endpoint retrieves a list of popular movies from TMDB.
+     *
+     * @return A list of Movie objects containing details about popular movies.
+     *         An empty list is returned if an error occurs during the API call.
+     * </summary>
+     */
     @GetMapping
     public List<Movie> getAllMovies() {
         return movieService.getAllMovies();
     }
 
+    /**
+     * Searches for movies by title.
+     *  <summary>
+     * This endpoint searches for movies based on the provided title string.
+     *
+     * @param title {String} - The title of the movie to search for.
+     * @return A list of Movie objects containing details about movies matching the search title.
+     *         An empty list is returned if an error occurs during the API call or no movies are found.
+     * </summary>
+     */
     @GetMapping("/getMovieByTitle")
     public List<Movie> getMovieByTitle(String title) {
         return movieService.getMovieByTitle(title);
+    }
+
+    /**
+     * Fetches a list of trending movies for a specified time window.
+     * <summary>
+     * This endpoint retrieves a list of trending movies on TMDB for a specified time window.
+     * The time window parameter can be either "day" or "week".
+     *
+     * @param time_window {String} - The time window for trending movies (literal string: "day" or "week").
+     * @return A list of Movie objects containing details about trending movies.
+     *         An empty list is returned if an error occurs during the API call or
+     *         if the provided time window is invalid.
+     * </summary>
+     */
+    @GetMapping("/getTrendingMovies")
+    public List<Movie> getLatest(String time_window) {
+        return movieService.getTrendingMovies(time_window);
     }
 
 }
