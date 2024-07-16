@@ -21,9 +21,9 @@ public class MovieService {
     private RestTemplate restTemplate;
 
     @Autowired
-    public MovieService(MovieRepository movieRepository) {
+    public MovieService(MovieRepository movieRepository, RestTemplate template) {
         this.MOVIE_REPOSITORY = movieRepository;
-        restTemplate = new RestTemplate();
+        restTemplate = template;
     }
 
     public List<Movie> getAllMovies() {
