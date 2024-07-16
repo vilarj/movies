@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/movies")
@@ -23,18 +22,9 @@ public class MovieController {
         return movieService.getAllMovies();
     }
 
-    @GetMapping("/{id}")
-    public Optional<Movie> getMovieById(@PathVariable Long id) {
-        return movieService.getMovieById(id);
+    @GetMapping("/getMovieByTitle")
+    public List<Movie> getMovieByTitle(String title) {
+        return movieService.getMovieByTitle(title);
     }
 
-    @PostMapping
-    public Movie addMovie(@RequestBody Movie movie) {
-        return movieService.addMovie(movie);
-    }
-
-    @DeleteMapping("/{id}")
-    public void deleteMovie(@PathVariable Long id) {
-        movieService.deleteMovie(id);
-    }
 }

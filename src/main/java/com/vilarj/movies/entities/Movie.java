@@ -1,7 +1,5 @@
 package com.vilarj.movies.entities;
 
-import java.time.LocalDateTime;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -14,7 +12,6 @@ public class Movie {
     private Long id;
     private String title;
     private String director;
-    private LocalDateTime addedOn;
 
     public Long getId() {
         return id;
@@ -40,15 +37,9 @@ public class Movie {
         this.director = director;
     }
 
-    public LocalDateTime getAddedOn() {
-        return addedOn;
-    }
+    public Movie() {
 
-    public void setAddedOn(LocalDateTime addedOn) {
-        this.addedOn = addedOn;
     }
-
-    protected Movie() {setAddedOn(addedOn);}
 
     public Movie(String title, String director) {
         this.title = title;
