@@ -32,7 +32,7 @@ public class MovieController {
      * This endpoint retrieves a list of popular movies from TMDB.
      *
      * @return A list of Movie objects containing details about popular movies.
-     *         An empty list is returned if an error occurs during the API call.
+     * An empty list is returned if an error occurs during the API call.
      * </summary>
      */
     @GetMapping
@@ -62,12 +62,12 @@ public class MovieController {
 
     /**
      * Searches for movies by title.
-     *  <summary>
+     * <summary>
      * This endpoint searches for movies based on the provided title string.
      *
      * @param title {String} - The title of the movie to search for.
      * @return A list of Movie objects containing details about movies matching the search title.
-     *         An empty list is returned if an error occurs during the API call or no movies are found.
+     * An empty list is returned if an error occurs during the API call or no movies are found.
      * </summary>
      */
     @GetMapping("/getMovieByTitle")
@@ -83,8 +83,8 @@ public class MovieController {
      *
      * @param time_window {String} - The time window for trending movies (literal string: "day" or "week").
      * @return A list of Movie objects containing details about trending movies.
-     *         An empty list is returned if an error occurs during the API call or
-     *         if the provided time window is invalid.
+     * An empty list is returned if an error occurs during the API call or
+     * if the provided time window is invalid.
      * </summary>
      */
     @GetMapping("/getTrendingMovies")

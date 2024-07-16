@@ -17,9 +17,9 @@ public class Validation {
      * This method performs a basic validation to check if the provided API key is null or empty.
      *
      * @param apiKey {String} - The API key string to validate.
-     * @throws IllegalArgumentException - If the provided API key is null or empty.
      * @return true - If the API key passes the basic validation (not null or empty).
      * </p>
+     * @throws IllegalArgumentException - If the provided API key is null or empty.
      */
     public static boolean isValidAPIKey(String apiKey) {
         if (apiKey == null || apiKey.isEmpty()) {

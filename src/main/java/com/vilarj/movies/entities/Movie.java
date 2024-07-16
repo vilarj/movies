@@ -85,7 +85,7 @@ public class Movie {
     /**
      * Constructor for Movie entity with title and director.
      *
-     * @param title - The title of the movie.
+     * @param title    - The title of the movie.
      * @param director - The director of the movie.
      */
     public Movie(String title, String director) {

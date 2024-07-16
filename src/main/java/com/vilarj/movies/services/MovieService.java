@@ -43,11 +43,11 @@ public class MovieService {
      * number is set to 1 (default for popular movies).
      *
      * @return A list of Movie objects containing details about popular movies.
-     *         An empty list is returned if an error occurs during the API call.
-     * @throws RestClientResponseException  - If an error occurs during the API call
-     *                                      (e.g., status code errors).
-     * @throws Exception                    - If any other unexpected exception occurs.
-     * </p>
+     * An empty list is returned if an error occurs during the API call.
+     * @throws RestClientResponseException - If an error occurs during the API call
+     *                                     (e.g., status code errors).
+     * @throws Exception                   - If any other unexpected exception occurs.
+     *                                     </p>
      */
     public List<Movie> getAllMovies() {
         String url = Constants.TMDB_BASE_URL + "movie/popular?api_key=" + Constants.API_KEY + "&language=en-US&page=1";
@@ -125,11 +125,11 @@ public class MovieService {
      *
      * @param title - The title of the movie to search for.
      * @return A list of Movie objects containing details about movies matching the search title.
-     *         An empty list is returned if an error occurs during the API call or no movies are found.
-     * @throws RestClientResponseException  - If an error occurs during the API call
-     *                                      (e.g., status code errors).
-     * @throws Exception                    - If any other unexpected exception occurs.
-     * </p>
+     * An empty list is returned if an error occurs during the API call or no movies are found.
+     * @throws RestClientResponseException - If an error occurs during the API call
+     *                                     (e.g., status code errors).
+     * @throws Exception                   - If any other unexpected exception occurs.
+     *                                     </p>
      */
     public List<Movie> getMovieByTitle(String title) {
         String encodedTitle = title.replace(" ", "+");
@@ -166,13 +166,13 @@ public class MovieService {
      *
      * @param time_window - The time window for trending movies (literal string: "day" or "week").
      * @return A list of Movie objects containing details about trending movies.
-     *         An empty list is returned if an error occurs during the API call or
-     *         if the provided time window is invalid.
-     * @throws RestClientResponseException  - If an error occurs during the API call
-     *                                      (e.g., status code errors).
-     * @throws IllegalArgumentException     - If an invalid time window parameter is provided.
-     * @throws Exception                    - If any other unexpected exception occurs.
-     * </p>
+     * An empty list is returned if an error occurs during the API call or
+     * if the provided time window is invalid.
+     * @throws RestClientResponseException - If an error occurs during the API call
+     *                                     (e.g., status code errors).
+     * @throws IllegalArgumentException    - If an invalid time window parameter is provided.
+     * @throws Exception                   - If any other unexpected exception occurs.
+     *                                     </p>
      */
     public List<Movie> getTrendingMovies(String time_window) {
         //String key = "4c3188597c9125186dfb65289a4bdcb4";
@@ -181,8 +181,7 @@ public class MovieService {
         try {
             if (!Validation.isValidAPIKey(Constants.API_KEY)) {
                 throw new IllegalArgumentException("API KEY cannot be null");
-            }
-            else {
+            } else {
                 if (!Validation.isValidTimeWindow(time_window)) {
                     throw new IllegalArgumentException("Invalid time window provided. Supported values: day, week");
                 }

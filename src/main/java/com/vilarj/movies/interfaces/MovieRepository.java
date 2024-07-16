@@ -12,4 +12,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * to be Long.
  * </p>
  */
-public interface MovieRepository extends JpaRepository<Movie, Long> { }
+public interface MovieRepository extends JpaRepository<Movie, Long> {
+}
