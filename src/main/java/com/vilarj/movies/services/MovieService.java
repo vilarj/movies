@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import com.vilarj.movies.validators.Validation;
 
@@ -93,7 +94,8 @@ public class MovieService {
      */
     public List<Movie> getExactMovieByTitle(String title) {
         String encodedTitle = title.replace(" ", "+");
-        String url = Constants.TMDB_BASE_URL + "/search/movie?api_key=" + Constants.API_KEY + "&query=" + encodedTitle;
+        String url = Constants.TMDB_BASE_URL + "/search/movie?api_key=" +
+                     Constants.API_KEY + "&query=" + encodedTitle;
 
         try {
             TmdbResponse response = restTemplate.getForObject(url, TmdbResponse.class);
@@ -175,7 +177,6 @@ public class MovieService {
      *                                     </p>
      */
     public List<Movie> getTrendingMovies(String time_window) {
-        //String key = "4c3188597c9125186dfb65289a4bdcb4";
         String url = Constants.TMDB_BASE_URL + "trending/movie/" + time_window + "?api_key=" + Constants.API_KEY;
 
         try {
