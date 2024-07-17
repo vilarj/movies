@@ -22,8 +22,6 @@ public class Tmdb {
 
     /**
      * Gets the title of the movie from the TMDB response.
-     *
-     * @return The title of the movie.
      */
     public void setTitle(String title) {
         this.title = title;

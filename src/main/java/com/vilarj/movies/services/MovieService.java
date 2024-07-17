@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import com.vilarj.movies.validators.Validation;
 
@@ -45,10 +44,7 @@ public class MovieService {
      *
      * @return A list of Movie objects containing details about popular movies.
      * An empty list is returned if an error occurs during the API call.
-     * @throws RestClientResponseException - If an error occurs during the API call
-     *                                     (e.g., status code errors).
-     * @throws Exception                   - If any other unexpected exception occurs.
-     *                                     </p>
+     * @throws RestClientResponseException - If an error occurs during the API call (e.g., status code errors).
      */
     public List<Movie> getAllMovies() {
         String url = Constants.TMDB_BASE_URL + "movie/popular?api_key=" + Constants.API_KEY + "&language=en-US&page=1";
@@ -128,10 +124,7 @@ public class MovieService {
      * @param title - The title of the movie to search for.
      * @return A list of Movie objects containing details about movies matching the search title.
      * An empty list is returned if an error occurs during the API call or no movies are found.
-     * @throws RestClientResponseException - If an error occurs during the API call
-     *                                     (e.g., status code errors).
-     * @throws Exception                   - If any other unexpected exception occurs.
-     *                                     </p>
+     * @throws RestClientResponseException - If an error occurs during the API call (e.g., status code errors).
      */
     public List<Movie> getMovieByTitle(String title) {
         String encodedTitle = title.replace(" ", "+");
@@ -173,8 +166,6 @@ public class MovieService {
      * @throws RestClientResponseException - If an error occurs during the API call
      *                                     (e.g., status code errors).
      * @throws IllegalArgumentException    - If an invalid time window parameter is provided.
-     * @throws Exception                   - If any other unexpected exception occurs.
-     *                                     </p>
      */
     public List<Movie> getTrendingMovies(String time_window) {
         String url = Constants.TMDB_BASE_URL + "trending/movie/" + time_window + "?api_key=" + Constants.API_KEY;
